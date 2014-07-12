@@ -73,7 +73,7 @@ compdef _git gm=git-merge
 alias grh='git reset HEAD'
 alias grhh='git reset HEAD --hard'
 alias gclean='git reset --hard && git clean -dfx'
-alias gwc='git whatchanged -p --abbrev-commit --pretty=medium'
+alias gwc='git whatchanged -p --abbrev-commit --pretty=medium --color'
 
 #remove the gf alias
 #alias gf='git ls-files | grep'

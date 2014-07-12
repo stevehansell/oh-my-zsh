@@ -28,6 +28,12 @@
 CURRENT_BG='NONE'
 SEGMENT_SEPARATOR='⮀'
 
+## huh dont need this
+collapse_pwd() {
+   # echo $(pwd | sed -e "s,^$HOME,~,")
+   echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
+}
+
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
 # rendering default background/foreground.
@@ -39,6 +45,8 @@ prompt_segment() {
     echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
   else
     echo -n "%{$bg%}%{$fg%} "
+    # echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
+    # echo $(pwd | sed -e "s,^$HOME,~,")
   fi
   CURRENT_BG=$1
   [[ -n $3 ]] && echo -n $3
@@ -63,7 +71,7 @@ prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$user@%m"
+    prompt_segment black default "%(!.%{%F{yellow}%}.)✝"
   fi
 }
 
@@ -83,19 +91,10 @@ prompt_git() {
   fi
 }
 
-function collapse_pwd {
-  if [[ -n $(pwd | grep ^$HOME/Development/ ) ]]; then
-    echo $(pwd | sed -e "s,^$HOME/Development/,,")
-  elif [[ -n $(pwd | grep ^$HOME/talks/ ) ]]; then
-    echo $(pwd | sed -e "s,^$HOME/talks/,,")
-  else
-      echo $(pwd | sed -e "s,^$HOME,~,")
-  fi
-}
-
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue white $(collapse_pwd)
+  prompt_segment blue black '%~'
+  # echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
 }
 
 # Status:
@@ -122,7 +121,4 @@ build_prompt() {
   prompt_end
 }
 
-PROMPT='
-%{%f%b%k%}$(build_prompt) '
-
-RPROMPT='!%!'
+PROMPT='%{%f%b%k%}$(build_prompt) '
